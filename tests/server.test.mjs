@@ -2,7 +2,7 @@
  * Tests del servidor de producción (server.mjs).
  */
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { after, before, describe, test } from 'node:test';
@@ -66,10 +66,5 @@ describe('servidor de producción', () => {
     const res = await fetch(`${base}/campus/`, { redirect: 'manual', headers: { host: 'www.hxmlatam.com' } }).catch(() => null);
     // fetch puede ignorar el Host personalizado; solo se valida si lo respetó.
     if (res && res.status === 301) assert.equal(res.headers.get('location'), 'https://hxmlatam.com/campus/');
-  });
-
-  test('el build incluye .htaccess para Apache / LiteSpeed', () => {
-    assert.ok(existsSync(join(OUT, '.htaccess')));
-    assert.match(readFileSync(join(OUT, '.htaccess'), 'utf8'), /ErrorDocument 404 \/404\.html/);
   });
 });

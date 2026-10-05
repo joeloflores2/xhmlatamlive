@@ -1,7 +1,7 @@
 # Cabeceras HTTP de seguridad (formato Netlify / Cloudflare Pages).
-# GitHub Pages NO permite cabeceras personalizadas: este archivo se usa solo si el
-# sitio se sirve detrás de Cloudflare (Transform Rules) o se migra a Netlify /
-# Cloudflare Pages (copiarlo a public/_headers en ese caso).
+# En Hostinger se aplican desde server.mjs (Node.js) o security/htaccess (estático).
+# Este archivo se usa solo si el sitio se migra a Netlify / Cloudflare Pages
+# (copiarlo a public/_headers en ese caso).
 # La Content-Security-Policy principal ya viaja en cada página como <meta>.
 
 /*

@@ -22,7 +22,7 @@ Proyecto deportivo en desarrollo en Aguascalientes, México, enfocado en formaci
 8. [Formularios](#formularios)
 9. [Analítica y cookies](#analítica-y-cookies)
 10. [Deployment en Hostinger](#deployment-en-hostinger)
-11. [Deployment en GitHub Pages](#deployment-en-github-pages)
+11. [Integración continua](#integración-continua)
 12. [Dominio y DNS](#dominio-y-dns)
 13. [Seguridad](#seguridad)
 14. [Cumplimiento de contenido](#cumplimiento-de-contenido)
@@ -42,7 +42,7 @@ Proyecto deportivo en desarrollo en Aguascalientes, México, enfocado en formaci
 | JavaScript del cliente | ~19 KB sin dependencias, mejora progresiva: el sitio es legible sin JS. |
 | Tipografía | [Archivo](https://fonts.google.com/specimen/Archivo) (variable): extra condensada para titulares, ancho normal para lectura. |
 | Tests | `node:test` (incluido en Node). |
-| Hosting | Hostinger (Node.js o aplicación estática) o GitHub Pages mediante GitHub Actions. |
+| Hosting | Hostinger (Node.js o aplicación estática). GitHub Actions solo valida (lint, tests, build). |
 
 Requisitos: **Node.js 20 o superior** (recomendado 22, ver `.nvmrc`).
 
@@ -67,7 +67,7 @@ Después de guardar un cambio, refresca el navegador.
 | `npm run build` | Build de producción en `dist/`. |
 | `npm start` | Servidor de producción (`server.mjs`) en el puerto `PORT` (3000 por defecto). Compila si falta `dist/`. |
 | `npm run lint` | Sintaxis JS, CSS, lenguaje prohibido y búsqueda de secretos. |
-| `npm test` | 36 pruebas: SEO, enlaces, accesibilidad, cumplimiento y seguridad. |
+| `npm test` | 34 pruebas: SEO, enlaces, accesibilidad, cumplimiento y seguridad. |
 | `npm run check` | Lint + tests + build (lo mismo que ejecuta CI). |
 | `npm run art` | Regenera las ilustraciones conceptuales SVG. |
 
@@ -92,7 +92,8 @@ Todas las variables son **públicas** (prefijo `PUBLIC_`): terminan en el HTML. 
 | `PUBLIC_MAP_URL` | Enlace de ubicación del campus | `https://maps.app.goo.gl/J4WKFbJHaZhM87AH6` |
 
 - **Local:** archivo `.env` (ignorado por Git).
-- **Producción:** GitHub → *Settings → Secrets and variables → Actions → pestaña **Variables*** → *New repository variable*.
+- **Producción:** variables de entorno del sitio en Hostinger (ver [Deployment en Hostinger](#deployment-en-hostinger)).
+- **CI (opcional):** GitHub → *Settings → Secrets and variables → Actions → pestaña **Variables***, para que el build de validación use los mismos valores.
 
 Los valores se validan en el build: IDs con formato incorrecto o endpoints que no sean `https://` se ignoran con una advertencia. La Content-Security-Policy se ajusta automáticamente a los servicios activos.
 
@@ -101,10 +102,9 @@ Los valores se validan en el build: IDs con formato incorrecto o endpoints que n
 ```text
 .
 ├── .github/
-│   ├── workflows/deploy.yml     # CI: lint → tests → build → GitHub Pages
+│   ├── workflows/ci.yml         # CI: lint → tests → build (sin publicar)
 │   └── dependabot.yml           # Actualiza versiones de GitHub Actions
 ├── public/                      # Se copia tal cual al sitio
-│   ├── CNAME                    # hxmlatam.com
 │   ├── favicon.ico / favicon.svg / apple-touch-icon.png / og-image.jpg
 │   ├── icons/                   # Íconos PWA
 │   ├── logos/                   # Logotipo oficial (pendiente)
@@ -260,56 +260,27 @@ En la configuración del sitio en Hostinger (*Variables de entorno*) agrega las 
 
 ### Dominio
 
-Conecta `hxmlatam.com` desde hPanel (*Dominios → Conectar dominio*). Si el dominio está registrado en Hostinger, el DNS se configura solo; si está en otro registrador, usa los registros o nameservers que indica hPanel **en lugar** de los de GitHub Pages de la sección [Dominio y DNS](#dominio-y-dns). Activa el certificado SSL gratuito en *Seguridad → SSL*.
+Ver [Dominio y DNS](#dominio-y-dns).
 
-Si publicas en Hostinger, desactiva el workflow de GitHub Pages (o deja de configurar Pages) para no tener dos sitios con el mismo dominio. El workflow sigue siendo útil para validar lint y tests en cada push.
+## Integración continua
 
-## Deployment en GitHub Pages
-
-El workflow `.github/workflows/deploy.yml`:
+El workflow `.github/workflows/ci.yml` corre en cada push y Pull Request a `main`:
 
 1. Instala dependencias (`npm ci`).
 2. Ejecuta `npm run lint`.
 3. Ejecuta `npm test`.
-4. Ejecuta `npm run build` con las variables del repositorio.
-5. Publica `dist/` en GitHub Pages. Esto solo ocurre en la rama `main`; los Pull Requests solo se validan.
+4. Ejecuta `npm run build`.
 
-**Configuración única:**
-
-1. Sube el código a la rama `main`. Si tu rama principal tiene otro nombre, ajústalo en el workflow.
-2. Ve a GitHub → *Settings → Pages → Build and deployment → Source:* **GitHub Actions**.
-3. Ve a *Settings → Secrets and variables → Actions → Variables* y agrega las variables `PUBLIC_*` que quieras activar.
-4. Haz push a `main` o ejecuta el workflow manualmente (*Actions → Build y deploy → Run workflow*).
+No publica nada: la publicación la hace Hostinger desde la rama `main`. Si el CI falla, revisa el error antes de desplegar.
 
 ## Dominio y DNS
 
-El dominio principal es el apex **`hxmlatam.com`**; `www.hxmlatam.com` redirige a él.
+El dominio principal es el apex **`hxmlatam.com`**; `www.hxmlatam.com` redirige a él (lo hacen `server.mjs` y `.htaccess`).
 
-### 1. En GitHub
-
-1. Ve a *Settings → Pages → Custom domain* y escribe `hxmlatam.com`. Guarda.
-2. Cuando el DNS verifique y el certificado esté listo (puede tardar hasta 24 h), activa **Enforce HTTPS**.
-3. Recomendado: verifica el dominio en *Settings de tu cuenta u organización → Pages → Add a domain*. Así evitas que otra cuenta lo reclame.
-
-> Con despliegue por GitHub Actions, GitHub usa el dominio configurado en *Settings*. El archivo `public/CNAME` se incluye por compatibilidad, pero no sustituye ese paso.
-
-### 2. En tu proveedor de DNS
-
-Elimina primero cualquier registro A, AAAA o CNAME previo del apex o de `www` (por ejemplo, páginas de estacionamiento del registrador).
-
-| Tipo | Nombre / Host | Valor |
-| --- | --- | --- |
-| A | `@` | `185.199.108.153` |
-| A | `@` | `185.199.109.153` |
-| A | `@` | `185.199.110.153` |
-| A | `@` | `185.199.111.153` |
-| AAAA (opcional) | `@` | `2606:50c0:8000::153` |
-| AAAA (opcional) | `@` | `2606:50c0:8001::153` |
-| AAAA (opcional) | `@` | `2606:50c0:8002::153` |
-| AAAA (opcional) | `@` | `2606:50c0:8003::153` |
-| CNAME | `www` | `<usuario-u-organizacion>.github.io` |
-
-Si tu proveedor admite registros `ALIAS` o `ANAME` para el apex, puedes usarlos apuntando a `<usuario-u-organizacion>.github.io` en lugar de los registros A.
+1. En hPanel: *Sitios web → (tu sitio) → Dominios → Conectar dominio* y escribe `hxmlatam.com`.
+2. **Dominio registrado en Hostinger:** el DNS se configura solo.
+3. **Dominio en otro registrador:** cambia los nameservers a los que indica hPanel, o crea los registros A/CNAME que muestra. Elimina antes cualquier registro A, AAAA o CNAME previo (incluidos los antiguos de GitHub Pages `185.199.x.153`).
+4. Activa el certificado SSL gratuito en *Seguridad → SSL*. Puede tardar unas horas tras la propagación.
 
 Verifica la propagación con:
 
@@ -318,20 +289,16 @@ dig hxmlatam.com +noall +answer
 dig www.hxmlatam.com +noall +answer
 ```
 
-Consulta los valores vigentes en la documentación oficial de GitHub Pages ("Managing a custom domain") antes de configurarlos.
-
 ## Seguridad
 
-- **HTTPS** forzado desde GitHub Pages.
+- **HTTPS** con el SSL de Hostinger; `.htaccess` fuerza la redirección en modo estático.
 - **Content-Security-Policy** en cada página. Se genera según los servicios activos y no permite scripts inline.
 - **Referrer-Policy** `strict-origin-when-cross-origin`.
 - **Enlaces externos** con `rel="noopener noreferrer"`.
 - **Sin secretos en el repositorio:** el lint busca patrones de claves y `.env` está en `.gitignore`.
 - **`localStorage`** solo guarda la decisión de cookies.
 
-**En Hostinger** las cabeceras de seguridad se aplican automáticamente (`server.mjs` en Node.js, `dist/.htaccess` en modo estático).
-
-**Limitación de GitHub Pages:** no permite cabeceras HTTP propias. `X-Frame-Options`, `Permissions-Policy`, HSTS y `nosniff` están listas en `security/_headers`. Para activarlas, sirve el sitio detrás de Cloudflare (*Transform Rules*) o en Netlify o Cloudflare Pages. Ver `security/README.md`.
+- **Cabeceras HTTP** (HSTS, `X-Frame-Options`, `Permissions-Policy`, `nosniff`, COOP): `server.mjs` en Node.js y `dist/.htaccess` en modo estático. Ver `security/README.md`.
 
 ## Cumplimiento de contenido
 

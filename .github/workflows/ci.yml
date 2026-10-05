@@ -1,5 +1,5 @@
-# Lint + tests + build en cada push y PR; publica en GitHub Pages solo desde main.
-name: Build y deploy (GitHub Pages)
+# Lint + tests + build en cada push y PR. El sitio se publica en Hostinger (ver README).
+name: CI
 
 on:
   push:
@@ -10,11 +10,9 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: ci-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -53,26 +51,3 @@ jobs:
           PUBLIC_INVESTMENT_ENDPOINT: ${{ vars.PUBLIC_INVESTMENT_ENDPOINT }}
           PUBLIC_PLAYER_ENDPOINT: ${{ vars.PUBLIC_PLAYER_ENDPOINT }}
           PUBLIC_MAP_URL: ${{ vars.PUBLIC_MAP_URL || 'https://maps.app.goo.gl/J4WKFbJHaZhM87AH6' }}
-
-      - name: Configurar Pages
-        if: github.event_name != 'pull_request'
-        uses: actions/configure-pages@v5
-
-      - name: Subir artefacto
-        if: github.event_name != 'pull_request'
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    name: Publicar
-    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy a GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4

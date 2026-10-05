@@ -1,22 +1,17 @@
 # Seguridad
 
-| Medida | Dónde | Estado en GitHub Pages |
+| Medida | Dónde | Estado en Hostinger |
 | --- | --- | --- |
-| HTTPS | Settings → Pages → *Enforce HTTPS* | Activo al configurar el dominio |
+| HTTPS | hPanel → *Seguridad → SSL*; `.htaccess` fuerza la redirección en modo estático | Activo al instalar el SSL |
 | Content-Security-Policy | `<meta>` en cada página, generada en `src/config/index.js` según las variables activas | Activo |
-| Referrer-Policy | `<meta name="referrer">` | Activo |
-| X-Frame-Options / `frame-ancestors` | `security/_headers` | Requiere proxy (Cloudflare) u otro hosting |
-| Permissions-Policy, HSTS, nosniff | `security/_headers` | Requiere proxy (Cloudflare) u otro hosting |
+| Referrer-Policy | `<meta name="referrer">` y cabecera HTTP | Activo |
+| X-Frame-Options / `frame-ancestors` | `server.mjs` (Node.js) · `security/htaccess` → `dist/.htaccess` (estático) | Activo |
+| Permissions-Policy, HSTS, nosniff, COOP | `server.mjs` (Node.js) · `security/htaccess` → `dist/.htaccess` (estático) | Activo |
 | Validación y saneamiento | `src/scripts/06-forms.js` (cliente) | Activo — **repetir en el servidor receptor** |
 | Anti-spam | Honeypot `_gotcha` + tiempo mínimo de llenado | Activo |
 | Secretos | Solo variables `PUBLIC_*` (públicas); lint detecta patrones de claves | Activo |
 
-Con Cloudflare como proxy, las cabeceras de `security/_headers` se configuran en
-**Rules → Transform Rules → Modify Response Header**.
+`security/_headers` contiene las mismas cabeceras en formato Netlify / Cloudflare Pages,
+por si algún día el sitio se sirve desde esas plataformas o detrás de Cloudflare.
 
-## Hostinger
-
-- **Node.js:** `server.mjs` envía las mismas cabeceras de `security/_headers`.
-- **Aplicación estática / hosting compartido:** `security/htaccess` se copia como `dist/.htaccess` en cada build.
-
-Si cambias una cabecera, actualízala en los tres lugares: `_headers`, `htaccess` y `server.mjs`.
+Si cambias una cabecera, actualízala en los tres lugares: `server.mjs`, `htaccess` y `_headers`.
