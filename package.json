@@ -1,0 +1,19 @@
+{
+  "name": "hxm-latam",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sitio oficial de Halcones Xtreme México / HXM LATAM — https://hxmlatam.com",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/dev.mjs --no-watch",
+    "lint": "node scripts/lint.mjs",
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "art": "node scripts/generate-art.mjs",
+    "check": "npm run lint && npm test && npm run build"
+  }
+}

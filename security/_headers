@@ -1,0 +1,17 @@
+# Cabeceras HTTP de seguridad (formato Netlify / Cloudflare Pages).
+# GitHub Pages NO permite cabeceras personalizadas: este archivo se usa solo si el
+# sitio se sirve detrás de Cloudflare (Transform Rules) o se migra a Netlify /
+# Cloudflare Pages (copiarlo a public/_headers en ese caso).
+# La Content-Security-Policy principal ya viaja en cada página como <meta>.
+
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Frame-Options: DENY
+  Content-Security-Policy: frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable

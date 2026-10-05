@@ -1,0 +1,55 @@
+/* ==========================================================================
+   HXM LATAM — Tokens de diseño
+   Cambia los valores de "Identidad" para actualizar toda la marca.
+   ========================================================================== */
+
+:root {
+  /* ── Identidad ─────────────────────────────────────────────────────────── */
+  --color-primary: #2b66ff;        /* Azul deportivo / eléctrico: acción */
+  --color-primary-dark: #0a1c40;   /* Azul profundo: secciones institucionales */
+  --color-secondary: #14171d;      /* Carbón */
+  --color-accent: #ffb020;         /* Ámbar halcón: línea de vuelo, énfasis puntual */
+  --color-background: #000000;     /* Negro */
+  --color-surface: #14171d;        /* Carbón para superficies */
+  --color-text: #f4f6fa;           /* Blanco */
+  --color-text-muted: #a7b0bf;     /* Texto secundario (contraste AA sobre negro y carbón) */
+
+  /* ── Derivados ─────────────────────────────────────────────────────────── */
+  --color-primary-hover: #4a7dff;
+  --color-primary-text: #9db9ff;   /* Azul legible como texto sobre fondos oscuros */
+  --color-accent-hover: #ffc24d;
+  --color-on-accent: #000000;
+  --color-line: rgb(244 246 250 / 0.12);
+  --color-line-strong: rgb(244 246 250 / 0.28);
+  --color-text-soft: rgb(244 246 250 / 0.86);
+  --color-danger: #ff9a9a;
+  --color-success: #76e3ad;
+  --color-whatsapp: #25d366;
+  --color-on-whatsapp: #04140a;
+
+  /* ── Tipografía ────────────────────────────────────────────────────────── */
+  /* Una sola familia (Archivo) en dos anchos: extra condensada para titulares,
+     ancho normal para lectura. */
+  --font-display: 'Archivo', 'Avenir Next Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif-condensed, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Archivo', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --stretch-display: 62%;
+  --stretch-condensed: 75%;
+
+  --fs-display: clamp(4.25rem, 1.4rem + 12vw, 11.5rem);
+  --fs-h1: clamp(3.25rem, 1.6rem + 6.5vw, 7.75rem);
+  --fs-h2: clamp(2.35rem, 1.4rem + 4.4vw, 5.5rem);
+  --fs-h3: clamp(1.45rem, 1.2rem + 0.9vw, 2rem);
+  --fs-h4: 1.15rem;
+  --fs-lead: clamp(1.125rem, 1rem + 0.45vw, 1.375rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9375rem;
+  --fs-caption: 0.8125rem;
+
+  /* ── Layout ────────────────────────────────────────────────────────────── */
+  --container: 1320px;
+  --gutter: clamp(1.25rem, 4vw, 3rem);
+  --section-space: clamp(4.5rem, 2.5rem + 7vw, 9rem);
+  --header-h: 4.75rem;
+  --radius-sm: 3px;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}

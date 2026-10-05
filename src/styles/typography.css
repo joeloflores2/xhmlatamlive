@@ -1,0 +1,107 @@
+/* ==========================================================================
+   Tipografía y jerarquía: H1 · H2 · H3 · body · small · caption
+   ========================================================================== */
+
+html {
+  font-size: 100%;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4,
+.h1, .h2, .h3, .h4 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-stretch: var(--stretch-display);
+  font-weight: 850;
+  line-height: 0.9;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  text-wrap: balance;
+  overflow-wrap: break-word;
+  hyphens: manual;
+}
+
+h1, .h1 { font-size: var(--fs-h1); line-height: 0.86; }
+h2, .h2 { font-size: var(--fs-h2); }
+
+h3, .h3 {
+  font-size: var(--fs-h3);
+  font-stretch: var(--stretch-condensed);
+  font-weight: 800;
+  line-height: 1;
+}
+
+h4, .h4 {
+  font-size: var(--fs-h4);
+  font-stretch: var(--stretch-condensed);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: 0.03em;
+}
+
+p { margin: 0 0 1rem; }
+
+.lead {
+  max-width: 44rem;
+  font-size: var(--fs-lead);
+  line-height: 1.5;
+  color: var(--color-text-soft);
+}
+
+.prose {
+  max-width: 62ch;
+  color: var(--color-text-soft);
+}
+
+.pull {
+  max-width: 28ch;
+  margin: 1.75rem 0 2rem;
+  padding-left: 1.25rem;
+  border-left: 3px solid var(--color-accent);
+  font-size: clamp(1.4rem, 1.1rem + 1.1vw, 2rem);
+  font-weight: 500;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+small, .small { font-size: var(--fs-small); }
+
+.caption, .fine {
+  font-size: var(--fs-caption);
+  line-height: 1.55;
+  color: var(--color-text-muted);
+}
+
+.fine {
+  max-width: 72ch;
+  margin-top: 1.75rem;
+}
+
+a {
+  color: var(--color-primary-text);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+a:hover { color: var(--color-text); }
+
+strong { font-weight: 700; }
+
+code {
+  padding: 0.1rem 0.35rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.9em;
+  background: rgb(255 255 255 / 0.07);
+  border-radius: var(--radius-sm);
+}

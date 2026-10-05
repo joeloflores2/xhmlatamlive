@@ -1,0 +1,17 @@
+# Dependencias y build
+node_modules/
+dist/
+.tmp/
+
+# Variables de entorno (nunca subir valores reales)
+.env
+.env.*
+!.env.example
+
+# Sistema / editores
+.DS_Store
+Thumbs.db
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea/

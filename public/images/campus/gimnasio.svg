@@ -1,0 +1,21 @@
+<!-- Imagen conceptual / proyecto en desarrollo · generada por scripts/generate-art.mjs -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+<defs>
+<pattern id="minor" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#9db9ff" stroke-opacity="0.07"/></pattern>
+<pattern id="major" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="url(#minor)"/><path d="M100 0H0V100" fill="none" stroke="#9db9ff" stroke-opacity="0.14"/></pattern>
+<marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#9db9ff"/></marker>
+</defs>
+<rect width="1200" height="800" fill="#0a1c40"/>
+<rect width="1200" height="800" fill="url(#major)"/>
+<g fill="none" stroke="#9db9ff" stroke-opacity="0.55" stroke-width="1.5"><path d="M24 46V24H46"/><path d="M1176 46V24H1154"/><path d="M24 754V776H46"/><path d="M1176 754V776H1154"/></g>
+<g fill="none" stroke="#e2eaff" stroke-width="2" stroke-opacity="0.85">
+<rect x="120" y="140" width="960" height="520" stroke-width="3"/>
+<path d="M1080 600V660" stroke="#0a1c40" stroke-width="5"/>
+<path d="M1080 600A60 60 0 0 0 1020 660" stroke-opacity="0.6" stroke-dasharray="4 5"/>
+<rect x="200" y="180" width="90" height="70"/><path d="M210 215H280" stroke="#ffb020"/><rect x="315" y="180" width="90" height="70"/><path d="M325 215H395" stroke="#ffb020"/><rect x="430" y="180" width="90" height="70"/><path d="M440 215H510" stroke="#ffb020"/><rect x="545" y="180" width="90" height="70"/><path d="M555 215H625" stroke="#ffb020"/><rect x="660" y="180" width="90" height="70"/><path d="M670 215H740" stroke="#ffb020"/><rect x="775" y="180" width="90" height="70"/><path d="M785 215H855" stroke="#ffb020"/><circle cx="168" cy="300" r="9"/><circle cx="212" cy="300" r="9"/><path d="M177 300H203"/><circle cx="168" cy="334" r="9"/><circle cx="212" cy="334" r="9"/><path d="M177 334H203"/><circle cx="168" cy="368" r="9"/><circle cx="212" cy="368" r="9"/><path d="M177 368H203"/><circle cx="168" cy="402" r="9"/><circle cx="212" cy="402" r="9"/><path d="M177 402H203"/><circle cx="168" cy="436" r="9"/><circle cx="212" cy="436" r="9"/><path d="M177 436H203"/><circle cx="168" cy="470" r="9"/><circle cx="212" cy="470" r="9"/><path d="M177 470H203"/><circle cx="168" cy="504" r="9"/><circle cx="212" cy="504" r="9"/><path d="M177 504H203"/><circle cx="168" cy="538" r="9"/><circle cx="212" cy="538" r="9"/><path d="M177 538H203"/><circle cx="168" cy="572" r="9"/><circle cx="212" cy="572" r="9"/><path d="M177 572H203"/><rect x="330" y="320" width="130" height="130"/><rect x="365" y="320" width="60" height="130" stroke-opacity="0.5"/><rect x="500" y="320" width="130" height="130"/><rect x="535" y="320" width="60" height="130" stroke-opacity="0.5"/><rect x="670" y="320" width="130" height="130"/><rect x="705" y="320" width="60" height="130" stroke-opacity="0.5"/><rect x="900" y="190" width="130" height="44" rx="10"/><path d="M915 212H1015" stroke-opacity="0.5"/><rect x="900" y="256" width="130" height="44" rx="10"/><path d="M915 278H1015" stroke-opacity="0.5"/><rect x="900" y="322" width="130" height="44" rx="10"/><path d="M915 344H1015" stroke-opacity="0.5"/><rect x="900" y="388" width="130" height="44" rx="10"/><path d="M915 410H1015" stroke-opacity="0.5"/><rect x="900" y="454" width="130" height="44" rx="10"/><path d="M915 476H1015" stroke-opacity="0.5"/>
+<rect x="160" y="550" width="800" height="80"/>
+<path d="M200 560V620" stroke-opacity="0.45"/><path d="M280 560V620" stroke-opacity="0.45"/><path d="M360 560V620" stroke-opacity="0.45"/><path d="M440 560V620" stroke-opacity="0.45"/><path d="M520 560V620" stroke-opacity="0.45"/><path d="M600 560V620" stroke-opacity="0.45"/><path d="M680 560V620" stroke-opacity="0.45"/><path d="M760 560V620" stroke-opacity="0.45"/><path d="M840 560V620" stroke-opacity="0.45"/><path d="M920 560V620" stroke-opacity="0.45"/><path d="M1000 560V620" stroke-opacity="0.45"/>
+</g>
+<path d="M200 550V630" stroke="#ffb020" stroke-width="3"/>
+<path d="M120 100L1080 100" stroke="#9db9ff" stroke-width="1.2" stroke-opacity="0.8" marker-start="url(#arrow)" marker-end="url(#arrow)" fill="none"/>
+</svg>
