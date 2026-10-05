@@ -21,11 +21,12 @@ Proyecto deportivo en desarrollo en Aguascalientes, México, enfocado en formaci
 7. [Cómo agregar imágenes](#cómo-agregar-imágenes)
 8. [Formularios](#formularios)
 9. [Analítica y cookies](#analítica-y-cookies)
-10. [Deployment en GitHub Pages](#deployment-en-github-pages)
-11. [Dominio y DNS](#dominio-y-dns)
-12. [Seguridad](#seguridad)
-13. [Cumplimiento de contenido](#cumplimiento-de-contenido)
-14. [Información pendiente](#información-pendiente)
+10. [Deployment en Hostinger](#deployment-en-hostinger)
+11. [Deployment en GitHub Pages](#deployment-en-github-pages)
+12. [Dominio y DNS](#dominio-y-dns)
+13. [Seguridad](#seguridad)
+14. [Cumplimiento de contenido](#cumplimiento-de-contenido)
+15. [Información pendiente](#información-pendiente)
 
 ---
 
@@ -41,7 +42,7 @@ Proyecto deportivo en desarrollo en Aguascalientes, México, enfocado en formaci
 | JavaScript del cliente | ~19 KB sin dependencias, mejora progresiva: el sitio es legible sin JS. |
 | Tipografía | [Archivo](https://fonts.google.com/specimen/Archivo) (variable): extra condensada para titulares, ancho normal para lectura. |
 | Tests | `node:test` (incluido en Node). |
-| Hosting | GitHub Pages mediante GitHub Actions. |
+| Hosting | Hostinger (Node.js o aplicación estática) o GitHub Pages mediante GitHub Actions. |
 
 Requisitos: **Node.js 20 o superior** (recomendado 22, ver `.nvmrc`).
 
@@ -64,8 +65,9 @@ Después de guardar un cambio, refresca el navegador.
 | `npm run dev` | Compila en modo desarrollo, sirve en `http://localhost:4321` y recompila al guardar. |
 | `npm run preview` | Igual, sin vigilar cambios. |
 | `npm run build` | Build de producción en `dist/`. |
+| `npm start` | Servidor de producción (`server.mjs`) en el puerto `PORT` (3000 por defecto). Compila si falta `dist/`. |
 | `npm run lint` | Sintaxis JS, CSS, lenguaje prohibido y búsqueda de secretos. |
-| `npm test` | 29 pruebas: SEO, enlaces, accesibilidad, cumplimiento y seguridad. |
+| `npm test` | 36 pruebas: SEO, enlaces, accesibilidad, cumplimiento y seguridad. |
 | `npm run check` | Lint + tests + build (lo mismo que ejecuta CI). |
 | `npm run art` | Regenera las ilustraciones conceptuales SVG. |
 
@@ -128,8 +130,9 @@ Los valores se validan en el build: IDs con formato incorrecto o endpoints que n
 │   ├── config/index.js          # Variables de entorno y CSP
 │   └── utils/                   # Helpers HTML y enlaces
 ├── scripts/                     # build, dev, lint, generadores de arte e íconos
-├── security/                    # Cabeceras HTTP para proxy (ver Seguridad)
-├── tests/site.test.mjs
+├── security/                    # Cabeceras HTTP: _headers (proxy) y htaccess (Apache/LiteSpeed)
+├── server.mjs                   # Servidor de producción para Hostinger Node.js (npm start)
+├── tests/                       # site.test.mjs · server.test.mjs
 ├── .env.example
 └── package.json
 ```
@@ -219,6 +222,48 @@ Con GTM, los eventos llegan como `dataLayer.push({ event: '<nombre>' })`.
 
 > Si usas GTM con etiquetas *Custom HTML*, la CSP estricta puede bloquearlas. Prefiere etiquetas nativas o ajusta la CSP en `src/config/index.js`.
 
+## Deployment en Hostinger
+
+En hPanel: **Sitios web → Agregar sitio web → "Sube tu código, nosotros lo alojamos"** y conecta este repositorio de GitHub. Hostinger ofrece dos modos; ambos funcionan.
+
+### Opción A — Node.js (recomendada)
+
+Sirve el sitio con `server.mjs`, que agrega todas las cabeceras de seguridad (HSTS, `X-Frame-Options`, `Permissions-Policy`, `nosniff`), caché larga para `/assets/`, compresión gzip, página 404 y redirección `www` → dominio principal.
+
+| Campo en Hostinger | Valor |
+| --- | --- |
+| Framework | Otro / Express (sin framework) |
+| Versión de Node.js | 22 (mínimo 20) |
+| Rama | `main` |
+| Comando de instalación | `npm ci` (no descarga paquetes) |
+| Comando de build | `npm run build` |
+| Comando de inicio | `npm start` |
+| Archivo de entrada | `server.mjs` |
+| Directorio de salida | `dist` (si lo solicita) |
+
+El servidor escucha en la variable `PORT` que asigna Hostinger. Si el build no se ejecutó, compila al arrancar.
+
+### Opción B — Aplicación estática
+
+| Campo en Hostinger | Valor |
+| --- | --- |
+| Comando de build | `npm run build` |
+| Directorio de salida / publicación | `dist` |
+
+El build genera `dist/.htaccess` (a partir de `security/htaccess`) con HTTPS forzado, redirección `www`, cabeceras de seguridad, caché y la página 404. Lo aplica el servidor Apache/LiteSpeed de Hostinger.
+
+> **Sin despliegue desde Git:** ejecuta `npm run build` en tu equipo y sube el **contenido** de `dist/` (incluidos los archivos ocultos `.htaccess`) a `public_html` con el Administrador de archivos o FTP.
+
+### Variables de entorno
+
+En la configuración del sitio en Hostinger (*Variables de entorno*) agrega las mismas `PUBLIC_*` de la tabla de [Variables de entorno](#variables-de-entorno). Se leen **durante el build**: tras cambiarlas, vuelve a desplegar.
+
+### Dominio
+
+Conecta `hxmlatam.com` desde hPanel (*Dominios → Conectar dominio*). Si el dominio está registrado en Hostinger, el DNS se configura solo; si está en otro registrador, usa los registros o nameservers que indica hPanel **en lugar** de los de GitHub Pages de la sección [Dominio y DNS](#dominio-y-dns). Activa el certificado SSL gratuito en *Seguridad → SSL*.
+
+Si publicas en Hostinger, desactiva el workflow de GitHub Pages (o deja de configurar Pages) para no tener dos sitios con el mismo dominio. El workflow sigue siendo útil para validar lint y tests en cada push.
+
 ## Deployment en GitHub Pages
 
 El workflow `.github/workflows/deploy.yml`:
@@ -283,6 +328,8 @@ Consulta los valores vigentes en la documentación oficial de GitHub Pages ("Man
 - **Enlaces externos** con `rel="noopener noreferrer"`.
 - **Sin secretos en el repositorio:** el lint busca patrones de claves y `.env` está en `.gitignore`.
 - **`localStorage`** solo guarda la decisión de cookies.
+
+**En Hostinger** las cabeceras de seguridad se aplican automáticamente (`server.mjs` en Node.js, `dist/.htaccess` en modo estático).
 
 **Limitación de GitHub Pages:** no permite cabeceras HTTP propias. `X-Frame-Options`, `Permissions-Policy`, HSTS y `nosniff` están listas en `security/_headers`. Para activarlas, sirve el sitio detrás de Cloudflare (*Transform Rules*) o en Netlify o Cloudflare Pages. Ver `security/README.md`.
 

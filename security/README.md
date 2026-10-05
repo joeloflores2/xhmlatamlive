@@ -13,3 +13,10 @@
 
 Con Cloudflare como proxy, las cabeceras de `security/_headers` se configuran en
 **Rules → Transform Rules → Modify Response Header**.
+
+## Hostinger
+
+- **Node.js:** `server.mjs` envía las mismas cabeceras de `security/_headers`.
+- **Aplicación estática / hosting compartido:** `security/htaccess` se copia como `dist/.htaccess` en cada build.
+
+Si cambias una cabecera, actualízala en los tres lugares: `_headers`, `htaccess` y `server.mjs`.

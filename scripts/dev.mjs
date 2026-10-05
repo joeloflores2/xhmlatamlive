@@ -4,33 +4,16 @@
  * - Uso: npm run dev  |  npm run preview (sin vigilancia de archivos)
  */
 import { spawnSync } from 'node:child_process';
-import { createReadStream, existsSync, statSync, watch } from 'node:fs';
+import { createReadStream, watch } from 'node:fs';
 import { createServer } from 'node:http';
-import { extname, join, normalize, resolve, dirname } from 'node:path';
+import { extname, join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { TYPES, resolveRequest } from './lib/static.mjs';
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(ROOT, 'dist');
 const PORT = Number(process.env.PORT) || 4321;
 const WATCH = !process.argv.includes('--no-watch');
-
-const TYPES = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.json': 'application/json',
-  '.webmanifest': 'application/manifest+json',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp',
-  '.avif': 'image/avif',
-  '.ico': 'image/x-icon',
-  '.xml': 'application/xml',
-  '.txt': 'text/plain; charset=utf-8',
-  '.pdf': 'application/pdf',
-};
 
 function build() {
   // Proceso separado: así cada build lee los módulos actualizados.
@@ -42,20 +25,18 @@ build();
 
 createServer((req, res) => {
   const url = new URL(req.url, `http://localhost:${PORT}`);
-  let path = normalize(decodeURIComponent(url.pathname)).replace(/^(\.\.[/\\])+/, '');
-  let file = join(DIST, path);
-  if (!file.startsWith(DIST)) {
-    res.writeHead(403).end();
+  const { status, file, location } = resolveRequest(DIST, url.pathname);
+  if (status === 301) {
+    res.writeHead(301, { Location: location }).end();
     return;
   }
-  if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');
-  if (!existsSync(file)) {
-    if (!path.endsWith('/') && existsSync(join(DIST, path, 'index.html'))) {
-      res.writeHead(301, { Location: `${url.pathname}/` }).end();
-      return;
-    }
+  if (status === 404) {
     res.writeHead(404, { 'Content-Type': TYPES['.html'] });
     createReadStream(join(DIST, '404.html')).pipe(res);
+    return;
+  }
+  if (status !== 200) {
+    res.writeHead(status).end();
     return;
   }
   res.writeHead(200, { 'Content-Type': TYPES[extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
