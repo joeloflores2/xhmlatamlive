@@ -66,12 +66,8 @@ describe('Estructura y despliegue', () => {
     assert.ok(existsSync(join(OUT, '404.html')), 'Falta 404.html');
   });
 
-  test('CNAME apunta al dominio oficial', () => {
-    assert.equal(readFileSync(join(OUT, 'CNAME'), 'utf8').trim(), 'hxmlatam.com');
-  });
-
-  test('.nojekyll, robots.txt y manifest existen', () => {
-    assert.ok(existsSync(join(OUT, '.nojekyll')));
+  test('.htaccess, robots.txt y manifest existen', () => {
+    assert.match(readFileSync(join(OUT, '.htaccess'), 'utf8'), /ErrorDocument 404 \/404\.html/);
     assert.match(readFileSync(join(OUT, 'robots.txt'), 'utf8'), /Sitemap: https:\/\/hxmlatam\.com\/sitemap\.xml/);
     const manifest = JSON.parse(readFileSync(join(OUT, 'site.webmanifest'), 'utf8'));
     for (const icon of manifest.icons) assert.ok(existsSync(join(OUT, icon.src)), `Falta ícono ${icon.src}`);

@@ -114,7 +114,9 @@ export async function build({ out = join(ROOT, 'dist'), dev = false, env = loadE
   write(join(out, 'sitemap.xml'), sitemap(pages, cfg));
   write(join(out, 'robots.txt'), robots(cfg));
   write(join(out, 'site.webmanifest'), manifest(site));
-  write(join(out, '.nojekyll'), '');
+  // Apache / LiteSpeed (Hostinger): cabeceras de seguridad, HTTPS y 404.
+  write(join(out, '.htaccess'), readFileSync(join(ROOT, 'security/htaccess'), 'utf8'));
+  write(join(out, 'assets', '.htaccess'), '<IfModule mod_headers.c>\n  Header set Cache-Control "public, max-age=31536000, immutable"\n</IfModule>\n');
 
   if (!quiet) {
     for (const w of cfg.warnings) console.warn(`⚠  ${w}`);
