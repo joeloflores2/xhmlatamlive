@@ -56,7 +56,7 @@ jobs:
 
       - name: Configurar Pages
         if: github.event_name != 'pull_request'
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
 
       - name: Subir artefacto
         if: github.event_name != 'pull_request'
